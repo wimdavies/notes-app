@@ -1,4 +1,3 @@
-
 class NotesModel {
   constructor() {
       this.notes = [];
