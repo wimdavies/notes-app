@@ -11,6 +11,8 @@ class NotesView {
       const newNote = document.querySelector('#note-input').value;
       // uses addNewNote function to add the note to model and dynamically display all notes
       this.addNewNote(newNote);
+      // clearing the input field once user has clicked
+      document.querySelector('#note-input').value = "";
     })
   }
 
