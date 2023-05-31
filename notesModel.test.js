@@ -10,8 +10,8 @@ describe("NotesModel", () => {
     it('#addNotes adds new notes to the array', () => {
         const notes = new NotesModel;
 
-        notes.addNotes('Go to the shops');
-        notes.addNotes('Buy milk');
+        notes.addNote('Go to the shops');
+        notes.addNote('Buy milk');
         
         expect(notes.getNotes()).toEqual(['Go to the shops', 'Buy milk']);
     })
@@ -19,8 +19,8 @@ describe("NotesModel", () => {
     it('#reset deletes all notes from the array', () => {
         const notes = new NotesModel;
 
-        notes.addNotes('Go to the shops');
-        notes.addNotes('Buy milk');
+        notes.addNote('Go to the shops');
+        notes.addNote('Buy milk');
         notes.reset();
 
         expect(notes.getNotes()).toEqual([]);

@@ -19,8 +19,8 @@ describe('NotesView', () => {
     const model = new NotesModel();
     const view = new NotesView(model);
     // -- setting up the model notes
-    model.addNotes('Buy milk')
-    model.addNotes('Walk the dog')
+    model.addNote('Buy milk')
+    model.addNote('Walk the dog')
 
     // 2. Act - call any method that modifies the page
     view.displayNotes();
