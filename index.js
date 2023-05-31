@@ -3,8 +3,6 @@ const NotesView = require('./notesView');
 
 // 1. Setup the model with two notes
 const model = new NotesModel;
-model.addNote('This is an example note');
-model.addNote('This is another example note');
 
 // 2. Setup the view
 const view = new NotesView(model);

@@ -31,4 +31,20 @@ describe('NotesView', () => {
     // or other things that make sense for your test.
     expect(document.querySelectorAll('div.note').length).toEqual(2);
   });
+
+  it('takes user-input note and displays it on button click', () => {
+    // 1. Arrange:
+    const model = new NotesModel();
+    const view = new NotesView(model);
+
+    // 2. Act:
+    const input = document.querySelector('#note-input');
+    input.value = 'A test note';
+
+    const buttonEl = document.querySelector('#add-note-button');
+    buttonEl.click();
+
+    expect(document.querySelectorAll('div.note').length).toEqual(1);
+    expect(document.querySelectorAll('div.note')[0].textContent).toBe("A test note");
+  });
 });
