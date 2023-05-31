@@ -15,6 +15,12 @@ class NotesView {
   }
 
   displayNotes() {
+    //first, refresh the list by removing current `div.note`s
+    document.querySelectorAll('div.note').forEach(div => {
+      div.remove();
+    });
+
+    // then, display the list afresh
     let notes = this.model.getNotes();
 
     notes.forEach(note => {
