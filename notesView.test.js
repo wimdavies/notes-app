@@ -73,7 +73,7 @@ describe('NotesView', () => {
   it('#displayNotesFromApi receives notes from the client and displays that list', () => {
     const mockClient = new NotesClient();
     
-    mockClient.loadNotes.mockReturnValue(
+    mockClient.loadNotes.mockResolvedValue(
       ['test note', 'another test note']
     );
     
