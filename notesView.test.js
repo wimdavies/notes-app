@@ -4,7 +4,10 @@
 
 const fs = require('fs');
 const NotesModel = require('./notesModel');
+const NotesClient = require('./notesClient');
 const NotesView = require('./notesView');
+
+jest.mock('./notesClient');
 
 describe('NotesView', () => {
 
@@ -12,6 +15,7 @@ describe('NotesView', () => {
   // to set the jest `document` HTML before each test
   beforeEach(() => {
     document.body.innerHTML = fs.readFileSync('./index.html');
+    NotesClient.mockClear();
   });
 
   it('displays a list of notes on the page', () => {
@@ -49,20 +53,38 @@ describe('NotesView', () => {
   });
 
   it('clears the old list of notes before displaying new list', () => {
-        const model = new NotesModel();
-        const view = new NotesView(model);
+    const model = new NotesModel();
+    const view = new NotesView(model);
+
+    // 2. Two input-and-click:
+    const input = document.querySelector('#note-input');
+    input.value = 'A test note';
+    const buttonEl = document.querySelector('#add-note-button');
+    buttonEl.click();
+
+    const anotherInput = document.querySelector('#note-input');
+    anotherInput.value = 'Another test note';
+    buttonEl.click();
+
+    expect(document.querySelectorAll('div.note').length).toEqual(2);
+    expect(document.querySelectorAll('div.note')[1].textContent).toBe("Another test note");
+  });
+
+  it('#displayNotesFromApi receives notes from the client and displays that list', () => {
+    const mockClient = new NotesClient();
     
-        // 2. Two input-and-click:
-        const input = document.querySelector('#note-input');
-        input.value = 'A test note';
-        const buttonEl = document.querySelector('#add-note-button');
-        buttonEl.click();
+    mockClient.loadNotes.mockReturnValue(
+      ['test note', 'another test note']
+    );
+    
+    const model = new NotesModel();
+    const view = new NotesView(model, mockClient);
 
-        const anotherInput = document.querySelector('#note-input');
-        anotherInput.value = 'Another test note';
-        buttonEl.click();
-
-        expect(document.querySelectorAll('div.note').length).toEqual(2);
-        expect(document.querySelectorAll('div.note')[1].textContent).toBe("Another test note");
+    view.displayNotesFromApi(() => {
+      expect(mockClient.loadNotes).toHaveBeenCalledTimes(1);
+      expect(document.querySelectorAll('div.note').length).toEqual(2);
+      expect(document.querySelectorAll('div.note')[0].textContent).toBe("test note");
+      expect(document.querySelectorAll('div.note')[1].textContent).toBe("another test note");
+    });
   });
 });

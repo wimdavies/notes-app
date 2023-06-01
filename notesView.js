@@ -1,8 +1,10 @@
 const NotesModel = require('./notesModel');
+const NotesClient = require('./notesClient');
 
 class NotesView {
-  constructor(model) {
+  constructor(model, client) {
     this.model = model;
+    this.client = client;
     this.mainContainerEl = document.querySelector('#main-container');
 
     // adding an on-click event listener to add-note-button
@@ -39,6 +41,13 @@ class NotesView {
     this.model.addNote(note);
 
     this.displayNotes();
+  }
+
+  displayNotesFromApi() {
+    this.client.loadNotes((notesData) => {
+      this.model.setNotes(notesData);
+      this.displayNotes();
+    })
   }
 }
 
