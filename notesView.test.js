@@ -80,11 +80,42 @@ describe('NotesView', () => {
     const model = new NotesModel();
     const view = new NotesView(model, mockClient);
 
-    view.displayNotesFromApi(() => {
-      expect(mockClient.loadNotes).toHaveBeenCalledTimes(1);
-      expect(document.querySelectorAll('div.note').length).toEqual(2);
-      expect(document.querySelectorAll('div.note')[0].textContent).toBe("test note");
-      expect(document.querySelectorAll('div.note')[1].textContent).toBe("another test note");
+    return view.displayNotesFromApi()
+      .then(() => {
+        expect(mockClient.loadNotes).toHaveBeenCalledTimes(1);
+        expect(document.querySelectorAll('div.note').length).toEqual(2);
+        expect(document.querySelectorAll('div.note')[0].textContent).toBe("test note");
+        expect(document.querySelectorAll('div.note')[1].textContent).toBe("another test note");
+        // done();
+    });
+  });
+
+  xit('sends user-input note to the server, and displays the new note from that location', (done) => {
+    const mockClient = new NotesClient();
+
+    const mockData = ['test note', 'another test note', 'buy milk'];
+    const mockNote = 'buy milk';
+
+    mockClient.createNote.mockImplementationOnce((mockNote, callback) => {
+      return Promise.resolve(callback(mockData));
+    })
+
+    const model = new NotesModel();
+    const view = new NotesView(model, mockClient);
+
+    const input = document.querySelector('#note-input');
+    input.value = mockNote;
+
+    const buttonEl = document.querySelector('#add-note-button');
+    buttonEl.click();
+
+    // console.log(mockClient.createNote);
+
+    view.displayNotesFromApi().then(() => {
+      expect(mockClient.createNote).toHaveBeenCalledTimes(1);
+      expect(document.querySelectorAll('.note').length).toEqual(3);
+      expect(document.querySelectorAll('.note')[-1].textContent).toBe('buy milk');
+      done();
     });
   });
 });

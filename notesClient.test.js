@@ -6,6 +6,8 @@ const NotesClient = require('./notesClient');
 require('jest-fetch-mock').enableMocks()
 
 describe('NotesClient', () => {
+
+  // this test uses `done` as the argument, and so needs `done` at the end
   it('#loadNotes calls fetch and loads notes', (done) => {
     // 1. Instantiate the class
     const client = new NotesClient();
@@ -19,22 +21,19 @@ describe('NotesClient', () => {
       ['This note is coming from the server', 'Another note']
     ));
 
-    // 3. We call the method, giving a callback function.
-    // When the HTTP response is received, the callback will be called.
-    // We then use `expect` to assert the data from the server contain
-    // what it should.
-    client.loadNotes((returnedDataFromApi) => {
+    // 3. We call the method. We chain `.then` to handle expectations.
+    client.loadNotes()
+      .then((returnedDataFromApi) => {
       expect(returnedDataFromApi).toEqual([
         'This note is coming from the server',
         'Another note'
       ]);
-
-      // 4. Tell Jest our test can now end.
       done();
     });
   });
 
-  it('#createNote posts a new note to the server', (done) => {
+  // this test returns a promise, and so does not require `done` 
+  it('#createNote posts a new note to the server', () => {
     // Instantiating the class
     const client = new NotesClient();
 
@@ -54,21 +53,18 @@ describe('NotesClient', () => {
     // making a note to be passed into the createNotes call
     const note = "A posted note";
 
-    // Calling the method, giving a callback function.
-    // When the HTTP response is received, the callback will be called.
-    // We then use `expect` to assert the data from the server contain
-    // what it should, and to check that fetch was called using the 
-    // expected arguments.
-    client.createNote(note, (returnedDataFromApi) => {
-      expect(fetchMock).toHaveBeenCalledWith(expectedUrl, expectedOptions);
-      expect(returnedDataFromApi).toEqual([
-        'This note is coming from the server',
-        'Another note',
-        'A posted note'
-      ]);
+    // Calling the method We chain `.then` to handle expectations.
+    return client.createNote(note)
+      .then((returnedDataFromApi) => {
+        expect(fetchMock).toHaveBeenCalledWith(expectedUrl, expectedOptions);
+        expect(returnedDataFromApi).toEqual([
+          'This note is coming from the server',
+          'Another note',
+          'A posted note'
+        ]);
 
       // Telling Jest our test can now end.
-      done();
+      // done();
     });
   });
 });
