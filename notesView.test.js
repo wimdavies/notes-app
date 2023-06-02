@@ -90,15 +90,13 @@ describe('NotesView', () => {
     });
   });
 
-  xit('sends user-input note to the server, and displays the new note from that location', (done) => {
+  it('sends user-input note to the server, and displays the new note from that location', async () => {
     const mockClient = new NotesClient();
 
     const mockData = ['test note', 'another test note', 'buy milk'];
     const mockNote = 'buy milk';
 
-    mockClient.createNote.mockImplementationOnce((mockNote, callback) => {
-      return Promise.resolve(callback(mockData));
-    })
+    mockClient.createNote.mockResolvedValue(mockData);
 
     const model = new NotesModel();
     const view = new NotesView(model, mockClient);
@@ -107,15 +105,13 @@ describe('NotesView', () => {
     input.value = mockNote;
 
     const buttonEl = document.querySelector('#add-note-button');
+    
     buttonEl.click();
 
-    // console.log(mockClient.createNote);
+    await Promise.resolve();
 
-    view.displayNotesFromApi().then(() => {
-      expect(mockClient.createNote).toHaveBeenCalledTimes(1);
-      expect(document.querySelectorAll('.note').length).toEqual(3);
-      expect(document.querySelectorAll('.note')[-1].textContent).toBe('buy milk');
-      done();
-    });
+    expect(mockClient.createNote).toHaveBeenCalledTimes(1);
+    expect(document.querySelectorAll('.note').length).toEqual(3);
+    expect(document.querySelectorAll('.note')[-1].textContent).toBe('buy milk');
   });
 });
