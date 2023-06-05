@@ -41,7 +41,6 @@ describe('NotesView', () => {
     const model = new NotesModel();
     const view = new NotesView(model);
 
-    // 2. Act:
     const input = document.querySelector('#note-input');
     input.value = 'A test note';
 
@@ -56,7 +55,6 @@ describe('NotesView', () => {
     const model = new NotesModel();
     const view = new NotesView(model);
 
-    // 2. Two input-and-click:
     const input = document.querySelector('#note-input');
     input.value = 'A test note';
     const buttonEl = document.querySelector('#add-note-button');
@@ -105,7 +103,6 @@ describe('NotesView', () => {
     input.value = mockNote;
 
     const buttonEl = document.querySelector('#add-note-button');
-    
     buttonEl.click();
 
     await Promise.resolve();

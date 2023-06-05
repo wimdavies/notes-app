@@ -9,10 +9,13 @@ class NotesView {
 
     // adding an on-click event listener to add-note-button
     document.querySelector('#add-note-button').addEventListener('click', () => {
+      
       // assigns the value of note-input to a variable
       const newNote = document.querySelector('#note-input').value;
+
       // uses addNewNote function to add the note to model and dynamically display all notes
-      this.addNewNote(newNote);
+      this.addNewNoteViaApi(newNote);
+
       // clearing the input field once user has clicked
       document.querySelector('#note-input').value = "";
     })
@@ -37,11 +40,19 @@ class NotesView {
     });
   }
 
-  addNewNote(note) {
-    this.model.addNote(note);
-
+  async addNewNoteViaApi(note) {
+    const notesData = await this.client.createNote(note);
+    this.model.setNotes(notesData);
     this.displayNotes();
   }
+
+  // addNewNoteViaApi(note) {
+  //   return this.client.createNote(note)
+  //     .then(notesData => {
+  //       this.model.setNotes(notesData);
+  //       this.displayNotes();
+  //     })
+  // }
 
   displayNotesFromApi() {
     return this.client.loadNotes()
